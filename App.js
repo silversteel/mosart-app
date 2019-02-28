@@ -3,6 +3,7 @@ import { View, Text, Image } from 'react-native'
 import { Icon } from 'native-base'
 import { Provider } from 'react-redux'
 import { createBottomTabNavigator, createStackNavigator, createAppContainer } from 'react-navigation'
+import { MenuProvider } from 'react-native-popup-menu';
 
 import store from './src/redux/store'
 import HomeScreen from './src/screens/Home' 
@@ -12,6 +13,7 @@ import ProfileScreen from './src/screens/Profile'
 import LoginScreen from './src/screens/Login'
 import RegisterScreen from './src/screens/Register'
 import NewPieceScreen from './src/screens/NewPiece'
+import EditPieceScreen from './src/screens/EditPiece'
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -60,6 +62,8 @@ const SurfStack = createStackNavigator({
 const AuthStack = createStackNavigator({
   MyProfile: ProfileScreen,
   NewPiece: NewPieceScreen,
+  EditPiece: EditPieceScreen,
+  Piece: PostScreen,
   Login: LoginScreen,
   Register: RegisterScreen
 }, {
@@ -104,7 +108,9 @@ export default class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <AppContainer />
+        <MenuProvider>
+          <AppContainer />
+        </MenuProvider>
       </Provider>
     )
   }

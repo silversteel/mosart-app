@@ -8,10 +8,22 @@ import { getUser } from '../redux/actions/user'
 import { createPiece } from '../redux/actions/posts'
 import { getPost, removeFavorite, addFavorite, removePiece, fetchPosts } from '../redux/actions/posts'
 
-class NewPiece extends Component {
+class EditPiece extends Component {
 
 	static navigationOptions = {
-		title: 'New Piece'
+		title: 'Edit Piece'
+	}
+
+	componentWillMount() {
+		this.setState({
+			imageSource: { 
+				uri: this.props.posts.post.image_uri,
+				type: 'image/png',
+				name: 'pict'
+			},
+			title: this.props.posts.post.title,
+			description: this.props.posts.post.description
+		})
 	}
 
 	handlePickImage() {
@@ -88,7 +100,7 @@ class NewPiece extends Component {
 							onPress={() => this.handleCreate(this.state)}
 						>
 							<View style={{backgroundColor:'#8BC34A', padding:10, borderRadius: 10}}>
-								<Text style={{color:'#fff', textAlign:'center', fontWeight:'bold', fontSize: 16}}>CREATE</Text>
+								<Text style={{color:'#fff', textAlign:'center', fontWeight:'bold', fontSize: 16}}>SAVE</Text>
 							</View>
 						</TouchableOpacity>
 					</View>
@@ -107,4 +119,4 @@ const mapStateToProps = ({ posts, auth, user }) => {
 	}
 }
 
-export default connect(mapStateToProps)(NewPiece)
+export default connect(mapStateToProps)(EditPiece)

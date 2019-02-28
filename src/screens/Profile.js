@@ -119,6 +119,7 @@ class Profile extends Component {
 							renderItem={({ item, index }) => (
 								<PostGridItem 
 									picture={item.image_uri}
+									onPressPicture={()=>this.props.navigation.navigate('Piece', { post_id: item.id })}
 								/>
 							)}
 							ListEmptyComponent={()=>(<View style={{flex:1, alignItems:'center', paddingVertical:50}}><Text style={{fontSize:20, color:'#9e9e9e'}}>No Pieces</Text></View>)}

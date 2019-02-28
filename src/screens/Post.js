@@ -2,9 +2,16 @@ import React, { Component } from 'react'
 import { ScrollView, FlatList, View, Image, Text, ActivityIndicator, TouchableOpacity, TouchableNativeFeedback } from 'react-native'
 import { connect } from 'react-redux'
 import { Icon, Thumbnail } from 'native-base'
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from 'react-native-popup-menu';
 import moment from 'moment'
 
-import { getPost, removeFavorite, addFavorite } from '../redux/actions/posts'
+import { getUser } from '../redux/actions/user'
+import { getPost, removeFavorite, addFavorite, removePiece, fetchPosts } from '../redux/actions/posts'
 import Comment from '../components/Comment'
 
 class Post extends Component {
@@ -51,6 +58,17 @@ class Post extends Component {
 		}
 	}
 
+	async handleDelete(post_id) {
+		try {
+			await this.props.dispatch(removePiece(post_id))
+			await this.props.dispatch(getUser(this.props.auth))
+			await this.props.dispatch(fetchPosts())
+			this.props.navigation.goBack()
+		} catch(e) {
+			alert('asdladkslsakd'+e)
+		}
+	}
+
 	render() {
 		if (this.props.posts.isLoading) {
 			return (
@@ -82,6 +100,24 @@ class Post extends Component {
 				heartColor = "#8e8e8e"
 			}
 
+			let options 
+
+			if(this.props.posts.post.user_id == this.props.user.user_id) {
+				options = (
+					<Menu>
+			      <MenuTrigger>
+			      	<Text style={{color:'blue', paddingHorizontal: 10}}>More</Text>
+			      </MenuTrigger>
+			      <MenuOptions>
+			        <MenuOption onSelect={() => this.props.navigation.navigate('EditPiece', { posts_id: this.props.posts.post.id })} text='Edit' />
+			        <MenuOption onSelect={() => this.handleDelete(this.props.posts.post.id)} >
+			          <Text style={{color: 'red'}}>Delete</Text>
+			        </MenuOption>
+			      </MenuOptions>
+			    </Menu>
+				)
+			}
+
 			return (
 				<ScrollView style={{flex: 1, flexDirection: 'column'}}>
 					<View style={{flex: 1, backgroundColor:'#fff', elevation:2}}>
@@ -90,8 +126,13 @@ class Post extends Component {
 							<View style={{flexDirection:'column', paddingHorizontal:10, flex:1}}>
 								<Text style={{fontSize: 20, fontWeight: 'bold', color: '#2e2e2e'}}>{this.props.posts.post.title}</Text>
 								<View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
-									<Text style={{fontSize: 16, color: '#347FC4', fontWeight: 'bold'}}>{this.props.posts.post.author.name}</Text>
-									<Text style={{color: '#8e8e8e'}}> {moment(this.props.posts.post.created_at, 'YYYY-MM-DD hh:mm:ss').fromNow()}</Text>
+									<View style={{flexDirection:'row', alignItems:'center'}}>
+										<Text style={{fontSize: 16, color: '#347FC4', fontWeight: 'bold'}}>{this.props.posts.post.author.name}</Text>
+										<Text style={{color: '#8e8e8e'}}>, {moment(this.props.posts.post.created_at, 'YYYY-MM-DD hh:mm:ss').fromNow()}</Text>
+									</View>
+									<View style={{flexDirection:'row', alignItems:'center'}}>
+										{options}
+									</View>
 								</View>
 							</View>
 						</View>
@@ -145,10 +186,11 @@ class Post extends Component {
 	}
 }
 
-const mapStateToProps = ({ posts, user }) => {
+const mapStateToProps = ({ posts, user, auth }) => {
 	return {
 		posts,
-		user
+		user,
+		auth
 	}
 }
 

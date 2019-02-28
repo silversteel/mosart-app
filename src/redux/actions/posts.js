@@ -28,6 +28,17 @@ export const removeFavorite = (post_id, user_id) => {
 	}
 }
 
+export const editPiece = (piece) => {
+	
+}
+ 
+export const removePiece = (post_id) => {
+	return {
+		type: 'REMOVE_PIECE',
+		payload: axios.delete('/post/'+post_id)
+	}
+}
+
 export const createPiece = (title, description, image) => {
 	return async (dispatch) => {
 		try {
