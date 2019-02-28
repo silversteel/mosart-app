@@ -27,3 +27,27 @@ export const removeFavorite = (post_id, user_id) => {
 		payload: axios.delete('/unfavorite/'+post_id)
 	}
 }
+
+export const createPiece = (title, description, image) => {
+	return async (dispatch) => {
+		try {
+			const res = await axios.post('/upload', image, {
+				headers: {
+					'Content-Type': `multipart/form-data; boundary=${image._boundary}`
+				}
+			})
+			dispatch({
+				action: 'CREATE_PIECE',
+				payload: axios.post('/post', {
+					image_uri: res.data.image,
+					title: title,
+					description: description,
+					views: '1'
+				})
+			})
+			alert('Piece created!')
+		} catch(e) {
+			alert(e)
+		}
+	}
+}

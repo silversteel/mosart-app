@@ -1,16 +1,24 @@
 import React, { Component } from 'react'
 import { ScrollView, View, Text, TouchableOpacity, TouchableNativeFeedback, FlatList, Image } from 'react-native'
 import { connect } from 'react-redux'
-import { Icon, Thumbnail } from 'native-base'
+import { Thumbnail, Container, Header, Button, Icon, Fab  } from 'native-base'
 
 import PostGridItem from '../components/PostGridItem'
 import { getToken, removeToken } from '../redux/actions/auth'
 import { getUser } from '../redux/actions/user'
 
 class Profile extends Component {
+
+	static navigationOptions = {
+		header: null
+	}
 	
 	componentDidMount() {
 		this.fetchUser()
+	}
+
+	state = {
+		active: true
 	}
 
 	async fetchUser() {
@@ -52,7 +60,8 @@ class Profile extends Component {
 			)
 		} else {
 			return (
-				<ScrollView style={{flex:1, flexDirection: 'column', backgroundColor:'#eee'}}>
+				<View style={{flex: 1}}>
+				<ScrollView style={{flexDirection: 'column', backgroundColor:'#eee'}}>
 					<View style={{flexDirection: 'column', paddingHorizontal:0, paddingBottom:30, backgroundColor:'#fff', elevation: 2}}>
 						<View style={{flex:1, flexDirection:'row', justifyContent:'flex-end'}}>
 							<TouchableNativeFeedback
@@ -112,10 +121,20 @@ class Profile extends Component {
 									picture={item.image_uri}
 								/>
 							)}
-							ListEmptyComponent={()=>(<View style={{flex:1, alignItems:'center', paddingVertical:50}}><Text style={{fontSize:20, color:'#9e9e9e'}}>No Content</Text></View>)}
+							ListEmptyComponent={()=>(<View style={{flex:1, alignItems:'center', paddingVertical:50}}><Text style={{fontSize:20, color:'#9e9e9e'}}>No Pieces</Text></View>)}
 						/>
 					</View>
 				</ScrollView>
+        <Fab
+          active={true}
+          direction="up"
+          containerStyle={{ }}
+          style={{ backgroundColor: '#fff' }}
+          position="bottomRight"
+          onPress={() => this.props.navigation.navigate('NewPiece')}>
+          <Icon style={{color:'#2e2e2e'}} name="plus" type="AntDesign" />
+        </Fab>
+				</View>
 			)
 		}
 	}

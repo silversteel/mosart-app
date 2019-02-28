@@ -11,6 +11,7 @@ import SurfScreen from './src/screens/Surf'
 import ProfileScreen from './src/screens/Profile'
 import LoginScreen from './src/screens/Login'
 import RegisterScreen from './src/screens/Register'
+import NewPieceScreen from './src/screens/NewPiece'
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -58,12 +59,20 @@ const SurfStack = createStackNavigator({
 
 const AuthStack = createStackNavigator({
   MyProfile: ProfileScreen,
+  NewPiece: NewPieceScreen,
   Login: LoginScreen,
   Register: RegisterScreen
 }, {
   initialRouteName: 'MyProfile',
   defaultNavigationOptions: {
-    header: null
+    headerStyle: {
+      backgroundColor: '#272838'
+    },
+    headerTitleStyle: {
+      color: '#989fce',
+      fontWeight: 'normal'
+    },
+    headerTintColor: '#989fce'
   },
   navigationOptions: {
     tabBarLabel: 'Profile',
