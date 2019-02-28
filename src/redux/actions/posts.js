@@ -28,8 +28,29 @@ export const removeFavorite = (post_id, user_id) => {
 	}
 }
 
-export const editPiece = (piece) => {
-	
+
+export const editPiece = (post_id, title, description, image) => {
+	return async (dispatch) => {
+		try {
+			const res = await axios.post('/upload', image, {
+				headers: {
+					'Content-Type': `multipart/form-data; boundary=${image._boundary}`
+				}
+			})
+			dispatch({
+				action: 'EDIT_PIECE',
+				payload: axios.patch('/post/'+post_id, {
+					image_uri: res.data.image,
+					title: title,
+					description: description,
+					views: '1'
+				})
+			})
+			alert('Piece updated!')
+		} catch(e) {
+			alert(e)
+		}
+	}
 }
  
 export const removePiece = (post_id) => {

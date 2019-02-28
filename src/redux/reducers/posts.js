@@ -100,6 +100,21 @@ export default postsReducer = (state = initialState, action) => {
 				...state,
 				isLoading: false
 			}
+		case 'EDIT_PIECE_PENDING':
+			return {
+				...state,
+				isLoading: true
+			}
+		case 'EDIT_PIECE_REJECTED':
+			return {
+				...state,
+				isLoading: false
+			}
+		case 'EDIT_PIECE_FULFILLED':
+			return {
+				...state,
+				isLoading: false
+			}
 		case 'REMOVE_PIECE_PENDING':
 			return {
 				...state,

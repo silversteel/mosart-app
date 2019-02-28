@@ -5,7 +5,7 @@ import ImagePicker from 'react-native-image-picker';
 import { connect } from 'react-redux'
 
 import { getUser } from '../redux/actions/user'
-import { createPiece } from '../redux/actions/posts'
+import { editPiece } from '../redux/actions/posts'
 import { getPost, removeFavorite, addFavorite, removePiece, fetchPosts } from '../redux/actions/posts'
 
 class EditPiece extends Component {
@@ -19,7 +19,7 @@ class EditPiece extends Component {
 			imageSource: { 
 				uri: this.props.posts.post.image_uri,
 				type: 'image/png',
-				name: 'pict'
+				fileName: 'pict'
 			},
 			title: this.props.posts.post.title,
 			description: this.props.posts.post.description
@@ -60,7 +60,7 @@ class EditPiece extends Component {
 				type: imageSource.type,
 				uri: imageSource.uri
 			})
-			await this.props.dispatch(createPiece(title, description, form))
+			await this.props.dispatch(editPiece(this.props.posts.post.id, title, description, form))
 			await this.props.dispatch(getUser(this.props.auth))
 			await this.props.dispatch(fetchPosts())
 			this.props.navigation.goBack()
