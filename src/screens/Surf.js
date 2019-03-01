@@ -91,16 +91,7 @@ class Surf extends Component {
 		return (
 			<ScrollView style={{flex: 1, backgroundColor:'#eee'}}>
 				<View style={{backgroundColor:'#fff', padding:10, flex:1, flexDirection:'row', justifyContent:'space-between'}}>
-					<TextInput style={{backgroundColor:'#eee', borderRadius: 5, padding: 10, width:'60%'}} placeholder="Search"/>
-					<Picker
-					  selectedValue={this.state.language}
-					  style={{height: 50, width: '40%'}}
-					  onValueChange={(itemValue, itemIndex) =>
-					    this.setState({language: itemValue})
-					  }>
-					  <Picker.Item label="Java" value="java" />
-					  <Picker.Item label="JavaScript" value="js" />
-					</Picker>
+					<TextInput style={{backgroundColor:'#eee', borderRadius: 5, padding: 10, width:'100%'}} placeholder="Search"/>
 				</View>
 				<FlatList 
 					data={this.state.posts}

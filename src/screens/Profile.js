@@ -63,7 +63,14 @@ class Profile extends Component {
 				<View style={{flex: 1}}>
 				<ScrollView style={{flexDirection: 'column', backgroundColor:'#eee'}}>
 					<View style={{flexDirection: 'column', paddingHorizontal:0, paddingBottom:30, backgroundColor:'#fff', elevation: 2}}>
-						<View style={{flex:1, flexDirection:'row', justifyContent:'flex-end'}}>
+						<View style={{flex:1, flexDirection:'row', justifyContent:'space-between'}}>
+							<TouchableNativeFeedback
+								onPress={() => this.props.navigation.navigate('EditProfile')}
+							>
+								<View style={{padding:10}}>
+									<Text style={{textAlign:'center', fontSize: 17, fontWeight:'bold', color:'#03A9F4'}}>Edit Profile</Text>
+								</View>
+							</TouchableNativeFeedback>
 							<TouchableNativeFeedback
 								onPress={() => this.handleLogout()}
 							>

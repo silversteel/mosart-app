@@ -58,7 +58,7 @@ export default postsReducer = (state = initialState, action) => {
 		case 'ADD_FAVORITE_PENDING':
 			return {
 				...state,
-				isLoading: false
+				isLoading: true
 			}
 		case 'ADD_FAVORITE_REJECTED':
 			return {
@@ -73,7 +73,7 @@ export default postsReducer = (state = initialState, action) => {
 		case 'REMOVE_FAVORITE_PENDING':
 			return {
 				...state,
-				isLoading: false
+				isLoading: true
 			}
 		case 'REMOVE_FAVORITE_REJECTED':
 			return {
@@ -126,6 +126,21 @@ export default postsReducer = (state = initialState, action) => {
 				isLoading: false
 			}
 		case 'REMOVE_PIECE_FULFILLED':
+			return {
+				...state,
+				isLoading: false
+			}
+		case 'ADD_COMMENT_PENDING':
+			return {
+				...state,
+				isLoading: true
+			}
+		case 'ADD_COMMENT_REJECTED':
+			return {
+				...state,
+				isLoading: false
+			}
+		case 'ADD_COMMENT_FULFILLED':
 			return {
 				...state,
 				isLoading: false

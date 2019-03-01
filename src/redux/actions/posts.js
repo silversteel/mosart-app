@@ -7,6 +7,13 @@ export const fetchPosts = (search) => {
 	}
 }
 
+export const searchPiece = (search) => {
+	return {
+		type: 'SEARCH_PIECE',
+		payload: search
+	}
+}
+
 export const getPost = (post_id, user_id) => {
 	return {
 		type: 'GET_POST',
@@ -81,5 +88,12 @@ export const createPiece = (title, description, image) => {
 		} catch(e) {
 			alert(e)
 		}
+	}
+}
+
+export const addComment = (content, post_id) => {
+	return {
+		type: 'ADD_COMMENT',
+		payload: axios.post('/comment', { post_id, content })
 	}
 }

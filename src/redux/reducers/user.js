@@ -39,6 +39,21 @@ export default userReducer = (state = initialState, action) => {
 				following: payload.data.following,
 				followers: payload.data.followers
 			}
+		case 'EDIT_PROFILE_PENDING':
+			return {
+				...state,
+				isLoading: true
+			}
+		case 'EDIT_PROFILE_REJECTED':
+			return {
+				...state,
+				isLoading: false
+			}
+		case 'EDIT_PROFILE_FULFILLED':
+			return {
+				...state,
+				isLoading: false
+			}
 		case 'LOGOUT':
 			return {
 				...state,

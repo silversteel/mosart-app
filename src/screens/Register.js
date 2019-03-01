@@ -1,7 +1,27 @@
 import React, { Component } from 'react'
 import { ScrollView, TouchableOpacity, Text, View, Image, TouchableNativeFeedback, TextInput } from 'react-native'
+import { connect } from 'react-redux'
 
-export default class Register extends Component {
+import { register } from '../redux/actions/auth' 
+
+class Register extends Component {
+
+	state = {
+		name: '',
+		username: '',
+		email: '',
+		password: ''
+	}
+
+	handleRegister(user) {
+		try {
+			this.props.dispatch(register(user))
+			this.props.navigation.goBack()
+		} catch(e) {
+			alert(e)
+		}
+	}
+
 	render() {
 		return (
 			<ScrollView style={{flex: 1, flexDirection:'column', backgroundColor:'#272838'}}>
@@ -10,18 +30,20 @@ export default class Register extends Component {
 				</View>
 				<View style={{flexDirection:'column', paddingHorizontal: 40}}>
 					<View style={{paddingBottom: 20}}>
-						<TextInput style={{ color:'#7d6b91', fontSize: 18, borderBottomWidth: 0.3, borderColor: '#7d6b91'}} placeholder="Name" placeholderTextColor="#5d536b"/>
+						<TextInput value={this.state.name} onChangeText={(name) => this.setState({name})} style={{ color:'#7d6b91', fontSize: 18, borderBottomWidth: 0.3, borderColor: '#7d6b91'}} placeholder="Name" placeholderTextColor="#5d536b"/>
 					</View>
 					<View style={{paddingBottom: 20}}>
-						<TextInput style={{ color:'#7d6b91', fontSize: 18, borderBottomWidth: 0.3, borderColor: '#7d6b91'}} placeholder="Email" placeholderTextColor="#5d536b"/>
+						<TextInput value={this.state.username} onChangeText={(username) => this.setState({username})} style={{ color:'#7d6b91', fontSize: 18, borderBottomWidth: 0.3, borderColor: '#7d6b91'}} placeholder="Email" placeholderTextColor="#5d536b"/>
 					</View>
 					<View style={{paddingBottom: 20}}>
-						<TextInput style={{ color:'#7d6b91', fontSize: 18, borderBottomWidth: 0.3, borderColor: '#7d6b91'}} placeholder="Username" placeholderTextColor="#5d536b"/>
+						<TextInput value={this.state.email} onChangeText={(email) => this.setState({email})} style={{ color:'#7d6b91', fontSize: 18, borderBottomWidth: 0.3, borderColor: '#7d6b91'}} placeholder="Username" placeholderTextColor="#5d536b"/>
 					</View>
 					<View style={{paddingBottom: 50}}>
-						<TextInput secureTextEntry={true} style={{ color:'#7d6b91', fontSize: 18, borderBottomWidth: 0.3, borderColor: '#7d6b91'}} placeholder="Password" placeholderTextColor="#5d536b"/>
+						<TextInput value={this.state.password} onChangeText={(password) => this.setState({password})} secureTextEntry={true} style={{ color:'#7d6b91', fontSize: 18, borderBottomWidth: 0.3, borderColor: '#7d6b91'}} placeholder="Password" placeholderTextColor="#5d536b"/>
 					</View>
-					<TouchableNativeFeedback>
+					<TouchableNativeFeedback
+						onPress={() => this.handleRegister(this.state)}
+					>
 						<View style={{padding:10, backgroundColor:'#7d6b91', borderRadius:100}}>
 							<Text style={{textAlign:'center', fontSize: 18, fontWeight:'bold', color:'#fff'}}>REGISTER</Text>
 						</View>
@@ -36,3 +58,12 @@ export default class Register extends Component {
 		)
 	}
 }
+
+const mapStateToProps = ({ auth, user }) => {
+	return {
+		auth,
+		user
+	}
+}
+
+export default connect(mapStateToProps)(Register)

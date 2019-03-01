@@ -14,6 +14,7 @@ import LoginScreen from './src/screens/Login'
 import RegisterScreen from './src/screens/Register'
 import NewPieceScreen from './src/screens/NewPiece'
 import EditPieceScreen from './src/screens/EditPiece'
+import EditProfileScreen from './src/screens/EditProfile'
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -63,6 +64,7 @@ const AuthStack = createStackNavigator({
   MyProfile: ProfileScreen,
   NewPiece: NewPieceScreen,
   EditPiece: EditPieceScreen,
+  EditProfile: EditProfileScreen,
   Piece: PostScreen,
   Login: LoginScreen,
   Register: RegisterScreen

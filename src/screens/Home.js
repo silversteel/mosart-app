@@ -48,12 +48,12 @@ class Home extends Component {
 						keyExtractor={(item, index) => String(index)}
 						renderItem={({ item, index }) => (
 							<PostItem 
-								profilePict={item.profile_image}
-								name={item.name}
+								profilePict={item.users.profiles.profile_image}
+								name={item.users.profiles.name}
 								title={item.title}
 								picture={item.image_uri}
-								favsCount='29'
-								commentsCount='29'
+								favsCount={item.__meta__.favorites_count}
+								commentsCount={item.__meta__.comments_count}
 								viewsCount={item.views}
 								uploadTime={moment(item.created_at, 'YYYY-MM-DD hh:mm:ss').fromNow()}
 								onPressItem={()=>this.props.navigation.navigate('Post', { post_id: item.id })}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { ScrollView, FlatList, View, Image, Text, ActivityIndicator, TouchableOpacity, TouchableNativeFeedback } from 'react-native'
 import { connect } from 'react-redux'
-import { Icon, Thumbnail } from 'native-base'
+import { Icon, Thumbnail, Form, Textarea } from 'native-base'
 import {
   Menu,
   MenuOptions,
@@ -11,7 +11,7 @@ import {
 import moment from 'moment'
 
 import { getUser } from '../redux/actions/user'
-import { getPost, removeFavorite, addFavorite, removePiece, fetchPosts } from '../redux/actions/posts'
+import { getPost, removeFavorite, addFavorite, removePiece, fetchPosts, addComment } from '../redux/actions/posts'
 import Comment from '../components/Comment'
 
 class Post extends Component {
@@ -54,7 +54,6 @@ class Post extends Component {
 			if(e.type && e.type == 'unauthorized'){
 				this.props.navigation.navigate('MyProfile')
 			}
-			alert(e)
 		}
 	}
 
@@ -67,6 +66,19 @@ class Post extends Component {
 		} catch(e) {
 			alert('asdladkslsakd'+e)
 		}
+	}
+
+	async handleAddComment(post_id) {
+		try {
+			await this.props.dispatch(addComment(this.state.myComment, post_id))
+			this.fetchData(this.props.posts.post.id, (this.props.user.user_id ? this.props.user.user_id : 0))
+		} catch(e) {
+			alert('asdladkslsakd'+e)
+		}
+	}
+
+	state = {
+		myComment: ''
 	}
 
 	render() {
@@ -115,6 +127,32 @@ class Post extends Component {
 			        </MenuOption>
 			      </MenuOptions>
 			    </Menu>
+				)
+			}
+
+			let comment
+
+			if(this.props.user.isLogin) {
+				comment = (
+					<View style={{ flex: 1, flexDirection:'row', paddingVertical:8, backgroundColor:'#fafafa'}}>
+						<View style={{paddingHorizontal:5}}>
+							<Thumbnail style={{width: 50, height: 50}} source={{uri: this.props.user.profile.profile_image}}/>
+						</View>
+						<View style={{ flex:1, flexDirection:'column', paddingHorizontal:10}}>
+							<Text style={{color:'#4e4e4e', fontSize: 18, fontWeight:'bold', paddingBottom: 3}}>{this.props.user.profile.name}</Text>
+							 	<Form>
+          				<Textarea value={this.state.myComment} onChangeText={(myComment) => this.setState({myComment})} rowSpan={3} bordered placeholder="Insert your comment here" />
+        				</Form>
+        				<View style={{flex:1, alignItems:'flex-end'}}>
+        				<TouchableOpacity
+        				onPress={() => this.handleAddComment(this.props.posts.post.id)}>
+        					<View style={{backgroundColor:'#7d6b91', width:100, margin:10}}>
+        						<Text style={{color:'#fff', textAlign:'center', padding: 5}}>Comment</Text>
+        					</View>
+        				</TouchableOpacity>
+        				</View>
+						</View>
+					</View>
 				)
 			}
 
@@ -179,6 +217,7 @@ class Post extends Component {
 								</View>
 							)}
 						/>
+						{comment}
 					</View>
 				</ScrollView>
 			)
