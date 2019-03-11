@@ -26,7 +26,7 @@ class Profile extends Component {
 			await this.props.dispatch(getToken())
 			await this.props.dispatch(getUser(this.props.auth))
 		} catch(e) {
-			if(!e.request.status == '401'){
+			if(e.request.status && !e.request.status == '401'){
 				alert(e)
 			}
 		}
@@ -80,14 +80,14 @@ class Profile extends Component {
 							</TouchableNativeFeedback>
 						</View>
 						<View style={{alignItems:'center'}}>
-							<Thumbnail large source={{uri: this.props.user.profile.profile_image}}/>
+							<Thumbnail large source={{uri: this.props.user.profile.image_url}}/>
 						</View>
 						<View style={{paddingVertical: 17}}>
 							<Text style={{fontSize: 26, fontWeight:'bold', color:'#2e2e2e', textAlign:'center'}}>{this.props.user.profile.name}</Text>
 							<Text style={{fontSize: 17, color: '#8e8e8e', textAlign:'center'}}>{this.props.user.profile.location}</Text>
 						</View>
 						<View style={{paddingBottom:10}}>
-							<Text style={{fontSize: 17, textAlign:'center', color:'#6e6e6e'}}>{this.props.user.profile.bio}</Text>
+							<Text style={{fontSize: 17, textAlign:'center', color:'#6e6e6e', paddingHorizontal:10}}>{this.props.user.profile.bio}</Text>
 						</View>
 						<View style={{alignItems:'center'}}>
 							<TouchableOpacity>
@@ -125,7 +125,7 @@ class Profile extends Component {
 							keyExtractor={(item, index) => String(index)}
 							renderItem={({ item, index }) => (
 								<PostGridItem 
-									picture={item.image_uri}
+									picture={item.image_url}
 									onPressPicture={()=>this.props.navigation.navigate('Piece', { post_id: item.id })}
 								/>
 							)}

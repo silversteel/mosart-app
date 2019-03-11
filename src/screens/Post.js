@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView, FlatList, View, Image, Text, ActivityIndicator, TouchableOpacity, TouchableNativeFeedback } from 'react-native'
+import { ScrollView, FlatList, Alert, View, Image, Text, ActivityIndicator, TouchableOpacity, TouchableNativeFeedback } from 'react-native'
 import { connect } from 'react-redux'
 import { Icon, Thumbnail, Form, Textarea } from 'native-base'
 import {
@@ -42,7 +42,7 @@ class Post extends Component {
 			const user = this.props.user
 			const post = this.props.posts.post
 
-			if(this.props.posts.post.isFavorite == '1'){
+			if(this.props.posts.post.__meta__.isFavorite == '1'){
 				await this.props.dispatch(removeFavorite(post.id, user.user_id))
 			} else {
 				await this.props.dispatch(addFavorite(post.id, user.user_id))
@@ -66,6 +66,16 @@ class Post extends Component {
 		} catch(e) {
 			alert('asdladkslsakd'+e)
 		}
+	}
+
+	handleWarn(id) {
+		Alert.alert('Confirmation', `Are you sure to delete this piece ?`,[
+  		{text: 'No'},
+  		{text: 'Yes', style:'cancel', onPress: ()=>{
+  			this.handleDelete(id)
+        }
+      }
+  	])
 	}
 
 	async handleAddComment(post_id) {
@@ -106,7 +116,7 @@ class Post extends Component {
 
 			let heartColor
 
-			if(this.props.posts.post.isFavorite == '1'){
+			if(this.props.posts.post.__meta__.isFavorite == '1'){
 				heartColor = "red"
 			} else {
 				heartColor = "#8e8e8e"
@@ -122,7 +132,7 @@ class Post extends Component {
 			      </MenuTrigger>
 			      <MenuOptions>
 			        <MenuOption onSelect={() => this.props.navigation.navigate('EditPiece', { posts_id: this.props.posts.post.id })} text='Edit' />
-			        <MenuOption onSelect={() => this.handleDelete(this.props.posts.post.id)} >
+			        <MenuOption onSelect={() => this.handleWarn(this.props.posts.post.id)} >
 			          <Text style={{color: 'red'}}>Delete</Text>
 			        </MenuOption>
 			      </MenuOptions>
@@ -136,7 +146,7 @@ class Post extends Component {
 				comment = (
 					<View style={{ flex: 1, flexDirection:'row', paddingVertical:8, backgroundColor:'#fafafa'}}>
 						<View style={{paddingHorizontal:5}}>
-							<Thumbnail style={{width: 50, height: 50}} source={{uri: this.props.user.profile.profile_image}}/>
+							<Thumbnail style={{width: 50, height: 50}} source={{uri: this.props.user.profile.image_url}}/>
 						</View>
 						<View style={{ flex:1, flexDirection:'column', paddingHorizontal:10}}>
 							<Text style={{color:'#4e4e4e', fontSize: 18, fontWeight:'bold', paddingBottom: 3}}>{this.props.user.profile.name}</Text>
@@ -159,13 +169,13 @@ class Post extends Component {
 			return (
 				<ScrollView style={{flex: 1, flexDirection: 'column'}}>
 					<View style={{flex: 1, backgroundColor:'#fff', elevation:2}}>
-						<View style={{flexDirection:'row', padding: 15, alignItems:'center'}}>
-							<Thumbnail source={{uri:this.props.posts.post.author.profile_image}}/>
+						<View style={{flex:1, flexDirection:'row', padding: 15, alignItems:'center'}}>
+							<Thumbnail source={{uri:this.props.posts.post.profiles[0].image_url}}/>
 							<View style={{flexDirection:'column', paddingHorizontal:10, flex:1}}>
 								<Text style={{fontSize: 20, fontWeight: 'bold', color: '#2e2e2e'}}>{this.props.posts.post.title}</Text>
 								<View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
 									<View style={{flexDirection:'row', alignItems:'center'}}>
-										<Text style={{fontSize: 16, color: '#347FC4', fontWeight: 'bold'}}>{this.props.posts.post.author.name}</Text>
+										<Text style={{fontSize: 16, color: '#347FC4', fontWeight: 'bold'}}>{this.props.posts.post.profiles[0].name}</Text>
 										<Text style={{color: '#8e8e8e'}}>, {moment(this.props.posts.post.created_at, 'YYYY-MM-DD hh:mm:ss').fromNow()}</Text>
 									</View>
 									<View style={{flexDirection:'row', alignItems:'center'}}>
@@ -174,14 +184,14 @@ class Post extends Component {
 								</View>
 							</View>
 						</View>
-							<Image style={{width: '100%', height: 300, resizeMode:'cover'}} source={{uri:this.props.posts.post.image_uri}}/>
+							<Image style={{width: '100%', height: 300, resizeMode:'cover'}} source={{uri:this.props.posts.post.image_url}}/>
 						<View style={{flex:1, margin:20, paddingBottom: 15, flexDirection:'row', alignItems:'center', borderBottomWidth: 1, borderColor: '#eee'}}>
 							<TouchableNativeFeedback
 								onPress={()=> this.handleFavoriteButton()}
 							>
 								<View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between', width:60, paddingHorizontal:10, paddingVertical:5}}>
 									<Icon style={{fontSize: 18, color: heartColor }} name="heart" type="AntDesign"/>
-									<Text style={{fontSize: 18, color: heartColor , fontWeight:'bold'}}>{this.props.posts.post.favorites}</Text>
+									<Text style={{fontSize: 18, color: heartColor , fontWeight:'bold'}}>{this.props.posts.post.__meta__.favorites_count}</Text>
 								</View>
 							</TouchableNativeFeedback>
 							<Icon style={{fontSize: 18, color:'#8e8e8e', paddingLeft:10 }} name="comment" type="MaterialCommunityIcons"/>
@@ -205,8 +215,8 @@ class Post extends Component {
 							keyExtractor={(item, index) => String(index)}
 							renderItem={({item, index}) => (
 								<Comment 
-									name={item.name}
-									profilePicture={item.profile_image}
+									name={item.profiles[0].name}
+									profilePicture={item.profiles[0].image_url}
 									content={item.content}
 									createdAt={moment(item.created_at, 'YYYY-MM-DD hh:mm:ss').fromNow()}
 								/>

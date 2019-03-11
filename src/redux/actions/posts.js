@@ -78,7 +78,7 @@ export const createPiece = (title, description, image) => {
 			dispatch({
 				action: 'CREATE_PIECE',
 				payload: axios.post('/post', {
-					image_uri: res.data.image,
+					image_url: res.data.image,
 					title: title,
 					description: description,
 					views: '1'

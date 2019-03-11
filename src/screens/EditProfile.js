@@ -15,7 +15,7 @@ class EditProfile extends Component {
 	componentWillMount() {
 		this.setState({
 			imageSource: { 
-				uri: this.props.user.profile.profile_image,
+				uri: this.props.user.profile.image_url,
 				type: 'image/png',
 				fileName: 'pict'
 			},
@@ -54,7 +54,15 @@ class EditProfile extends Component {
 
 	async handleEdit({ name, bio, location, website, imageSource }){
 		try {
-			this.props.dispatch(editProfile(this.props.user.user_id, name, bio, location, website, imageSource))
+			let form = new FormData()
+			form.append('picture', {
+				name: imageSource.fileName,
+				type: imageSource.type,
+				uri: imageSource.uri
+			})
+			await this.props.dispatch(editProfile(this.props.user.user_id, name, bio, location, website, form))
+			await this.props.dispatch(getUser(this.props.auth))
+			this.props.navigation.goBack()
 		} catch(e) {
 			alert(e)
 		}

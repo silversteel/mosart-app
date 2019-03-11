@@ -6,6 +6,10 @@ import { register } from '../redux/actions/auth'
 
 class Register extends Component {
 
+	static navigationOptions = {
+		header: null
+	}
+
 	state = {
 		name: '',
 		username: '',
@@ -13,12 +17,17 @@ class Register extends Component {
 		password: ''
 	}
 
-	handleRegister(user) {
+	async handleRegister(user) {
 		try {
-			this.props.dispatch(register(user))
+			await this.props.dispatch(register(user))
+			alert('Register success')
 			this.props.navigation.goBack()
 		} catch(e) {
-			alert(e)
+			if(e.response && e.response.data) {
+				alert(e.response.data.message)
+			} else {
+				alert(e)
+			}
 		}
 	}
 
@@ -33,10 +42,10 @@ class Register extends Component {
 						<TextInput value={this.state.name} onChangeText={(name) => this.setState({name})} style={{ color:'#7d6b91', fontSize: 18, borderBottomWidth: 0.3, borderColor: '#7d6b91'}} placeholder="Name" placeholderTextColor="#5d536b"/>
 					</View>
 					<View style={{paddingBottom: 20}}>
-						<TextInput value={this.state.username} onChangeText={(username) => this.setState({username})} style={{ color:'#7d6b91', fontSize: 18, borderBottomWidth: 0.3, borderColor: '#7d6b91'}} placeholder="Email" placeholderTextColor="#5d536b"/>
+						<TextInput value={this.state.email} onChangeText={(email) => this.setState({email})} style={{ color:'#7d6b91', fontSize: 18, borderBottomWidth: 0.3, borderColor: '#7d6b91'}} placeholder="Email" placeholderTextColor="#5d536b"/>
 					</View>
 					<View style={{paddingBottom: 20}}>
-						<TextInput value={this.state.email} onChangeText={(email) => this.setState({email})} style={{ color:'#7d6b91', fontSize: 18, borderBottomWidth: 0.3, borderColor: '#7d6b91'}} placeholder="Username" placeholderTextColor="#5d536b"/>
+						<TextInput value={this.state.username} onChangeText={(username) => this.setState({username})} style={{ color:'#7d6b91', fontSize: 18, borderBottomWidth: 0.3, borderColor: '#7d6b91'}} placeholder="Username" placeholderTextColor="#5d536b"/>
 					</View>
 					<View style={{paddingBottom: 50}}>
 						<TextInput value={this.state.password} onChangeText={(password) => this.setState({password})} secureTextEntry={true} style={{ color:'#7d6b91', fontSize: 18, borderBottomWidth: 0.3, borderColor: '#7d6b91'}} placeholder="Password" placeholderTextColor="#5d536b"/>

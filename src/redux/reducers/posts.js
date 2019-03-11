@@ -1,9 +1,10 @@
 const initialState = {
 	data: [],
 	post: {
-		author: {},
+		profiles: [{}],
 		tags: [],
-		comments: []
+		comments: [],
+		__meta__: {}
 	},
 	isLoading: false,
 	isError: false

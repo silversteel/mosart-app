@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Image, View, Text, FlatList } from 'react-native'
 import { connect } from 'react-redux'
-import { Container, Content, Icon } from 'native-base'
+import { Container, Content, Icon, List } from 'native-base'
 import moment from 'moment'
 
 import PostItem from '../components/PostItem'
@@ -41,34 +41,37 @@ class Home extends Component {
 				<Content>
 					<View style={{ paddingBottom: 15 }}>
 					</View>
-					<FlatList 
-						data={this.props.posts.data}
-						refreshing={this.props.posts.isLoading}
-						onRefresh={() => this.getPosts()}
-						keyExtractor={(item, index) => String(index)}
-						renderItem={({ item, index }) => (
-							<PostItem 
-								profilePict={item.users.profiles.profile_image}
-								name={item.users.profiles.name}
-								title={item.title}
-								picture={item.image_uri}
-								favsCount={item.__meta__.favorites_count}
-								commentsCount={item.__meta__.comments_count}
-								viewsCount={item.views}
-								uploadTime={moment(item.created_at, 'YYYY-MM-DD hh:mm:ss').fromNow()}
-								onPressItem={()=>this.props.navigation.navigate('Post', { post_id: item.id })}
-							/>
-						)}
-					/>
+					<List>
+						<FlatList 
+							data={this.props.posts.data}
+							refreshing={this.props.posts.isLoading}
+							onRefresh={() => this.getPosts()}
+							keyExtractor={(item, index) => String(index)}
+							renderItem={({ item, index }) => (
+								<PostItem 
+									profilePict={item.profiles[0].image_url}
+									name={item.profiles[0].name}
+									title={item.title}
+									picture={item.image_url}
+									favsCount={item.__meta__.favorites_count}
+									commentsCount={item.__meta__.comments_count}
+									viewsCount={item.views}
+									uploadTime={moment(item.created_at, 'YYYY-MM-DD hh:mm:ss').fromNow()}
+									onPressItem={()=>this.props.navigation.navigate('Post', { post_id: item.id })}
+								/>
+							)}
+						/>
+					</List>
 				</Content>
 			</Container>
 		)
 	}
 }
 
-const mapStateToProps = ({ posts }) => {
+const mapStateToProps = ({ posts, auth }) => {
 	return {
-		posts
+		posts,
+		auth
 	}
 }
 

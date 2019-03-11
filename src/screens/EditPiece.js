@@ -17,7 +17,7 @@ class EditPiece extends Component {
 	componentWillMount() {
 		this.setState({
 			imageSource: { 
-				uri: this.props.posts.post.image_uri,
+				uri: this.props.posts.post.image_url,
 				type: 'image/png',
 				fileName: 'pict'
 			},

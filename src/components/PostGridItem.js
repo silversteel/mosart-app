@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { View, Image, TouchableNativeFeedback } from 'react-native'
+import { View, Image, TouchableNativeFeedback,Text } from 'react-native'
+import { Icon } from 'native-base'
 
 export default class PostGridItem extends Component {
 
