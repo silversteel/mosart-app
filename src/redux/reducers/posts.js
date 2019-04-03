@@ -6,6 +6,8 @@ const initialState = {
 		comments: [],
 		__meta__: {}
 	},
+	surf: [],
+	surfLoading: false,
 	isLoading: false,
 	isError: false
 }
@@ -51,10 +53,11 @@ export default postsReducer = (state = initialState, action) => {
 			return {
 				...state,
 				post: {
-					author: {},
+					profiles: [{}],
 					tags: [],
-					comments: []
-				}
+					comments: [],
+					__meta__: {}
+				},
 			}
 		case 'ADD_FAVORITE_PENDING':
 			return {
@@ -145,6 +148,22 @@ export default postsReducer = (state = initialState, action) => {
 			return {
 				...state,
 				isLoading: false
+			}
+		case 'SEARCH_PIECES_PENDING':
+			return {
+				...state,
+				surfLoading: true
+			}
+		case 'SEARCH_PIECES_REJECTED':
+			return {
+				...state,
+				surfLoading: false
+			}
+		case 'SEARCH_PIECES_FULFILLED':
+			return {
+				...state,
+				surfLoading: false,
+				surf: payload.data
 			}
 		default:
 			return state

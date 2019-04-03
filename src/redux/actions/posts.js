@@ -7,10 +7,23 @@ export const fetchPosts = (search) => {
 	}
 }
 
-export const searchPiece = (search) => {
+export const searchPieces = ({ title, tags }) => {
+	let uri = '?'
+	if(title) {
+		uri = uri + `&title=${title}`
+	}
+
+	if(tags && tags.length > 0) {
+		uri = uri + `&tags=${JSON.stringify(tags.map((item) => item.id))}`
+	}
+
+	const queryString = uri.replace(/^\?(\&)/gi, (match, p1, string) => {
+		return '?'
+	})
+
 	return {
-		type: 'SEARCH_PIECE',
-		payload: search
+		type: 'SEARCH_PIECES',
+		payload: axios.get('/posts'+queryString)
 	}
 }
 
@@ -36,7 +49,7 @@ export const removeFavorite = (post_id, user_id) => {
 }
 
 
-export const editPiece = (post_id, title, description, image) => {
+export const editPiece = (post_id, title, description, tags, image) => {
 	return async (dispatch) => {
 		try {
 			const res = await axios.post('/upload', image, {
@@ -47,9 +60,10 @@ export const editPiece = (post_id, title, description, image) => {
 			dispatch({
 				action: 'EDIT_PIECE',
 				payload: axios.patch('/post/'+post_id, {
-					image_uri: res.data.image,
+					image_url: res.data.image,
 					title: title,
 					description: description,
+					tags: JSON.stringify(tags),
 					views: '1'
 				})
 			})
@@ -67,7 +81,8 @@ export const removePiece = (post_id) => {
 	}
 }
 
-export const createPiece = (title, description, image) => {
+export const createPiece = (title, description, tags, image) => {
+	console.warn(JSON.stringify(tags))
 	return async (dispatch) => {
 		try {
 			const res = await axios.post('/upload', image, {
@@ -81,6 +96,7 @@ export const createPiece = (title, description, image) => {
 					image_url: res.data.image,
 					title: title,
 					description: description,
+					tags: JSON.stringify(tags),
 					views: '1'
 				})
 			})

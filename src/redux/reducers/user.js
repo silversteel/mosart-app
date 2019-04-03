@@ -6,7 +6,11 @@ const initialState = {
 	posts: [],
 	followers: 0,
 	following: 0,
-	otherProfile: {},
+	isOtherLoading: false,
+	otherProfile: {
+		profile: {},
+		posts: []
+	},
 	isLogin: false,
 	isLoading: false,
 	isError: false
@@ -62,6 +66,22 @@ export default userReducer = (state = initialState, action) => {
 				email: '',
 				username: '',
 				profile: {}
+			}
+		case 'GET_OTHER_USER_PENDING':
+			return {
+				...state,
+				isOtherLoading: true
+			}
+		case 'GET_OTHER_USER_REJECTED':
+			return {
+				...state,
+				isOtherLoading: false
+			}
+		case 'GET_OTHER_USER_FULFILLED':
+			return {
+				...state,
+				isOtherLoading: false,
+				otherProfile: payload.data
 			}
 		default:
 			return state

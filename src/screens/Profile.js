@@ -91,7 +91,7 @@ class Profile extends Component {
 						</View>
 						<View style={{alignItems:'center'}}>
 							<TouchableOpacity>
-								<Text style={{color:'#347fc4'}}>My Website</Text>
+								<Text style={{color:'#347fc4'}}>{this.props.user.profile.website}</Text>
 							</TouchableOpacity>
 						</View>
 						<View style={{flex: 1, flexDirection:'row', paddingVertical: 20}}>

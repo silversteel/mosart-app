@@ -116,7 +116,7 @@ class Post extends Component {
 
 			let heartColor
 
-			if(this.props.posts.post.__meta__.isFavorite == '1'){
+			if(this.props.posts.post.__meta__ && this.props.posts.post.__meta__.isFavorite == '1'){
 				heartColor = "red"
 			} else {
 				heartColor = "#8e8e8e"
@@ -175,7 +175,11 @@ class Post extends Component {
 								<Text style={{fontSize: 20, fontWeight: 'bold', color: '#2e2e2e'}}>{this.props.posts.post.title}</Text>
 								<View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
 									<View style={{flexDirection:'row', alignItems:'center'}}>
-										<Text style={{fontSize: 16, color: '#347FC4', fontWeight: 'bold'}}>{this.props.posts.post.profiles[0].name}</Text>
+										<TouchableOpacity
+											onPress={() => this.props.navigation.navigate('OtherProfile', { id: this.props.posts.post.user_id })}
+										>
+											<Text style={{fontSize: 16, color: '#347FC4', fontWeight: 'bold'}}>{this.props.posts.post.profiles[0].name}</Text>
+										</TouchableOpacity>
 										<Text style={{color: '#8e8e8e'}}>, {moment(this.props.posts.post.created_at, 'YYYY-MM-DD hh:mm:ss').fromNow()}</Text>
 									</View>
 									<View style={{flexDirection:'row', alignItems:'center'}}>

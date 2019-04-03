@@ -8,6 +8,14 @@ export const getUser = ({ id, token }) => {
 		}
 }
 
+export const getOtherUser = ( id ) => {
+	return {
+			type:'GET_OTHER_USER',
+			payload: axios.get('/user/other/'+id)
+		}
+}
+
+
 export const editProfile = (user_id, name, bio, location, website, image) => {
 	return async (dispatch) => {
 		try {

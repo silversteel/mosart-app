@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { ScrollView, View, Text, TouchableOpacity, Image, TextInput } from 'react-native'
-import { Form, Item, Label, Input } from 'native-base'
+import { ScrollView, View, Text, TouchableOpacity, Image, TextInput, FlatList } from 'react-native'
+import { Form, Item, Label, Input, List } from 'native-base'
 import ImagePicker from 'react-native-image-picker';
 import { connect } from 'react-redux'
 
 import { getUser } from '../redux/actions/user'
+import { getTags } from '../redux/actions/tags'
 import { createPiece } from '../redux/actions/posts'
 import { getPost, removeFavorite, addFavorite, removePiece, fetchPosts } from '../redux/actions/posts'
 
@@ -12,6 +13,10 @@ class NewPiece extends Component {
 
 	static navigationOptions = {
 		title: 'New Piece'
+	}
+
+	componentDidMount() {
+		this.props.dispatch(getTags()).then(() => this.setState({suggestions: this.props.tags.data}))
 	}
 
 	handlePickImage() {
@@ -40,7 +45,7 @@ class NewPiece extends Component {
 		});
 	}
 
-	async handleCreate({ title, description, imageSource }){
+	async handleCreate({ title, description, tags, imageSource }){
 		try {
 			let form = new FormData()
 			form.append('picture', {
@@ -48,7 +53,7 @@ class NewPiece extends Component {
 				type: imageSource.type,
 				uri: imageSource.uri
 			})
-			await this.props.dispatch(createPiece(title, description, form))
+			await this.props.dispatch(createPiece(title, description, tags, form))
 			await this.props.dispatch(getUser(this.props.auth))
 			await this.props.dispatch(fetchPosts())
 			this.props.navigation.goBack()
@@ -60,7 +65,27 @@ class NewPiece extends Component {
 	state = {
 		imageSource: 'http://',
 		title:'',
-		description:''
+		description:'',
+		suggestions: [], 
+		tags: [],
+		tag: {
+			id: 0,
+			label: ''
+		}
+	}
+
+	handleDelete = index => {
+	   let tagsSelected = this.state.tags;
+	   tagsSelected.splice(index, 1);
+	   this.setState({ tags: tagsSelected });
+	}
+
+	handleAddTags = () => {
+		this.setState({ tags: this.state.tags.concat([this.state.tag]) });
+	}
+
+	handleAddition = suggestion => {
+	   this.setState({ tags: this.state.tags.concat([suggestion]) });
 	}
 
 	render() {
@@ -84,6 +109,51 @@ class NewPiece extends Component {
 							<Text style={{ fontWeight:'bold', fontSize:17 }}>Description</Text>
 							<TextInput value={this.state.description} onChangeText={(description) => this.setState({description})} style={{borderBottomWidth: 1, borderColor: 'lightgray', padding:10, paddingTop:5}}/>
 						</View>
+            <View style={{flex:1, flexDirection:'column'}}>
+            	<Text style={{ fontWeight:'bold', fontSize:17, paddingBottom:5}}>Tags</Text>
+            	<View style={{flex:1, flexDirection:'row', flexWrap:'wrap', paddingBottom:10}}>
+            		{this.state.tags.map((item, index) => (
+            			<TouchableOpacity
+            				key={String(index)}
+            				onPress={() => this.handleDelete(index)}
+            			>
+            				<Text style={{backgroundColor:'#9e9e9e', padding:5, margin:5, borderRadius:5, color:'#fff'}}>{item.label}</Text>
+            			</TouchableOpacity>
+            			))}
+            	</View>
+            	<View style={{flex:1, flexDirection:'row'}}>
+            		<View style={{flex:1, flexDirection:'column'}}>
+		            	<TextInput value={this.state.tag.label} autoFocus={true} onFocus={() => this.setState({isFocus: true})} style={{backgroundColor:'#fafafa', paddingHorizontal: 10, paddingVertical:5}} onChangeText={(text) => {
+		            		this.setState({tag: {id: 0, label: text}})
+		            		this.setState({suggestions: this.props.tags.data.filter((item) => RegExp(text.toLowerCase()).test(item.label))})
+		            	}}/>
+						       <View style={{flex:1, borderWidth:0.3, borderTopWidth:0, borderColor:'lightgray', marginBottom:10}}>
+							      	<FlatList 
+							      		data={this.state.suggestions}
+							      		keyExtractor={(item, index) => String(index)}
+							      		renderItem={ ({item}) => (
+							      			<TouchableOpacity
+							      				onPress={() => this.handleAddition(item)}
+							      			>
+							      				<View style={{paddingHorizontal:10, paddingVertical:5, backgroundColor:'#fff'}}>
+							      					<Text>{item.label}</Text>
+							      				</View>
+							      			</TouchableOpacity>)
+							      		}
+							      	/>
+						    	</View>
+					    	</View>
+					    	<View style={{flexDirection:'column', alignItems: 'flex-start'}}>
+					    		<TouchableOpacity
+					    			onPress={() => this.handleAddTags()}
+					    		>
+					    			<View style={{padding:10, backgroundColor:'#03A9F4'}}>
+					    				<Text style={{textAlign:'center', color:'#fff'}}>Add</Text>
+					    			</View>
+					    		</TouchableOpacity>
+					    	</View>
+				    	</View>
+            </View>
 						<TouchableOpacity
 							onPress={() => this.handleCreate(this.state)}
 						>
@@ -99,11 +169,12 @@ class NewPiece extends Component {
 }
 
 
-const mapStateToProps = ({ posts, auth, user }) => {
+const mapStateToProps = ({ posts, auth, user, tags }) => {
 	return {
 		posts,
 		auth,
-		user
+		user,
+		tags
 	}
 }
 

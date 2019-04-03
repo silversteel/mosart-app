@@ -10,6 +10,7 @@ import HomeScreen from './src/screens/Home'
 import PostScreen from './src/screens/Post' 
 import SurfScreen from './src/screens/Surf'
 import ProfileScreen from './src/screens/Profile'
+import OtherProfile from './src/screens/OtherProfile'
 import LoginScreen from './src/screens/Login'
 import RegisterScreen from './src/screens/Register'
 import NewPieceScreen from './src/screens/NewPiece'
@@ -18,6 +19,7 @@ import EditProfileScreen from './src/screens/EditProfile'
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
+  OtherProfile,
   Post: PostScreen
 }, {
   initialRouteName: 'Home',
